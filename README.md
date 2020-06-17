@@ -9,3 +9,4 @@ Just say zero all the time. And you will be 99% accurate. My model can be reason
 Designing a Data Science project is much more important than the modeling itself.
 
 ### 1. Accuracy, Precision, and Recall:
+![alt text]
