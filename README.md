@@ -44,3 +44,8 @@ And thus comes the idea of utilizing tradeoff of precision vs. recall — F1 Sco
 This is my favorite evaluation metric and I tend to use this a lot in my classification projects.
 The F1 score is a number between 0 and 1 and is the harmonic mean of precision and recall.
 ![](<f1score.png>)
+Let us start with a binary prediction problem. We are predicting if an asteroid will hit the earth or not.
+So if we say “No” for the whole training set. Our precision here is 0. What is the recall of our positive class? It is zero. What is the accuracy? It is more than 99%.
+And hence the F1 score is also 0. And thus we get to know that the classifier that has an accuracy of 99% is basically worthless for our case. And hence it solves our problem.
+#### When to use?
+We want to have a model with both good precision and recall.
