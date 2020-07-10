@@ -39,13 +39,39 @@ And thus recall is also equal to 0.
 Recall is a valid choice of evaluation metric when we want to capture as many positives as possible. For example: If we are building a system to predict if a person has cancer or not, we want to capture the disease even if we are not very sure.
 #### Caveats
 Recall is 1 if we predict 1 for all examples.
-And thus comes the idea of utilizing tradeoff of precision vs. recall — F1 Score.
-2. F1 Score:
+And thus comes the idea of utilizing tradeoff of precision vs. recall — F1 Score. 
+
+### 2. F1 Score:
 This is my favorite evaluation metric and I tend to use this a lot in my classification projects.
 The F1 score is a number between 0 and 1 and is the harmonic mean of precision and recall.
 ![](<f1score.png>)
 Let us start with a binary prediction problem. We are predicting if an asteroid will hit the earth or not.
 So if we say “No” for the whole training set. Our precision here is 0. What is the recall of our positive class? It is zero. What is the accuracy? It is more than 99%.
 And hence the F1 score is also 0. And thus we get to know that the classifier that has an accuracy of 99% is basically worthless for our case. And hence it solves our problem.
-#### When to use?
-We want to have a model with both good precision and recall.
+#### When to use? 
+We want to have a model with both good precision and recall. Simply stated the F1 score sort of maintains a balance between the precision and recall for your classifier. If your precision is low, the F1 is low and if the recall is low again your F1 score is low.
+ 
+#### How to Use? 
+```
+from sklearn.metrics import f1_score
+y_true = [0, 1, 1, 0, 1, 1]
+y_pred = [0, 0, 1, 0, 0, 1]
+f1_score(y_true, y_pred)  
+```
+ 
+```
+# y_pred is an array of predictions
+def bestThresshold(y_true,y_pred):
+    best_thresh = None
+    best_score = 0
+    for thresh in np.arange(0.1, 0.501, 0.01):
+        score = f1_score(y_true, np.array(y_pred)>thresh)
+        if score > best_score:
+            best_thresh = thresh
+            best_score = score
+            
+    return best_score , best_thresh
+```
+#### Caveats
+The main problem with the F1 score is that it gives equal weight to precision and recall. We might sometimes need to include domain knowledge in our evaluation where we want to have more recall or more precision. To solve this, we can do this by creating a weighted F1 metric as below where beta manages the tradeoff between precision and recall.
+![](<image(1).png>)
