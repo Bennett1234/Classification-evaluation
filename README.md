@@ -74,4 +74,69 @@ def bestThresshold(y_true,y_pred):
 ```
 #### Caveats
 The main problem with the F1 score is that it gives equal weight to precision and recall. We might sometimes need to include domain knowledge in our evaluation where we want to have more recall or more precision. To solve this, we can do this by creating a weighted F1 metric as below where beta manages the tradeoff between precision and recall.
-![](<image(1).png>)
+![](<image (1).png>) 
+Here we give β times as much importance to recall as precision. 
+* F1 Score can also be used for Multiclass problems. See this awesome blog post by Boaz Shmueli for details.
+### 3. Log Loss/Binary Crossentropy
+Log loss is a pretty good evaluation metric for binary classifiers and it is sometimes the optimization objective as well in case of Logistic regression and Neural Networks.
+Binary Log loss for an example is given by the below formula where p is the probability of predicting 1. 
+![](<binary crossentropy.png>)  
+#### When to Use?
+When the output of a classifier is prediction probabilities. Log Loss takes into account the uncertainty of your prediction based on how much it varies from the actual label. This gives us a more nuanced view of the performance of our model. In general, minimizing Log Loss gives greater accuracy for the classifier.
+#### How to Use?
+```
+from sklearn.metrics import log_loss  
+# where y_pred are probabilities and y_true are binary class labels
+log_loss(y_true, y_pred, eps=1e-15)
+```
+#### Caveats
+It is susceptible in case of imbalanced datasets. You might have to introduce class weights to penalize minority errors more or you may use this after balancing your dataset.
+ 
+### 4. Categorical Crossentropy
+The log loss also generalizes to the multiclass problem. The classifier in a multiclass setting must assign a probability to each class for all examples. If there are N samples belonging to M classes, then the Categorical Crossentropy is the summation of -ylogp values: 
+![](<multiple entropy.png>)  
+y_ij is 1 if the sample i belongs to class j else 0
+p_ij is the probability our classifier predicts of sample i belonging to class j. 
+#### When to Use?
+When the output of a classifier is multiclass prediction probabilities. We generally use Categorical Crossentropy in case of Neural Nets. In general, minimizing Categorical cross-entropy gives greater accuracy for the classifier.
+#### How to Use?
+```
+from sklearn.metrics import log_loss  
+# Where y_pred is a matrix of probabilities with shape = (n_samples, n_classes) and y_true is an array of class labels
+log_loss(y_true, y_pred, eps=1e-15)
+```
+#### Caveats:
+It is susceptible in case of imbalanced datasets.
+
+### 5. AUC
+AUC is the area under the ROC curve.
+AUC ROC indicates how well the probabilities from the positive classes are separated from the negative classes
+
+What is the ROC curve?
+We have got the probabilities from our classifier. We can use various threshold values to plot our sensitivity(TPR) and (1-specificity)(FPR) on the cure and we will have a ROC curve.
+Where True positive rate or TPR is just the proportion of trues we are capturing using our algorithm.
+Sensitivty = TPR(True Positive Rate)= Recall = TP/(TP+FN)
+and False positive rate or FPR is just the proportion of false we are capturing using our algorithm.
+1- Specificity = FPR(False Positive Rate)= FP/(TN+FP)
+![](<AUCROC.png>)  
+Here we can use the ROC curves to decide on a Threshold value.
+The choice of threshold value will also depend on how the classifier is intended to be used.
+If it is a cancer classification application you don’t want your threshold to be as big as 0.5. Even if a patient has a 0.3 probability of having cancer you would classify him to be 1.
+Otherwise, in an application for reducing the limits on the credit card, you don’t want your threshold to be as less as 0.5. You are here a little worried about the negative effect of decreasing limits on customer satisfaction. 
+#### When to Use?
+AUC is scale-invariant. It measures how well predictions are ranked, rather than their absolute values. So, for example, if you as a marketer want to find a list of users who will respond to a marketing campaign. AUC is a good metric to use since the predictions ranked by probability is the order in which you will create a list of users to send the marketing campaign.
+Another benefit of using AUC is that it is classification-threshold-invariant like log loss. It measures the quality of the model’s predictions irrespective of what classification threshold is chosen, unlike F1 score or accuracy which depend on the choice of threshold.
+#### How to Use?
+```
+import numpy as np
+from sklearn.metrics import roc_auc_score
+y_true = np.array([0, 0, 1, 1])
+y_scores = np.array([0.1, 0.4, 0.35, 0.8])
+print(roc_auc_score(y_true, y_scores))
+```
+#### Caveats
+Sometimes we will need well-calibrated probability outputs from our models and AUC doesn’t help with that.
+### Conclusion
+An important step while creating our machine learning pipeline is evaluating our different models against each other. A bad choice of an evaluation metric could wreak havoc to your whole system.
+So, always be watchful of what you are predicting and how the choice of evaluation metric might affect/alter your final predictions.
+Also, the choice of an evaluation metric should be well aligned with the business objective and hence it is a bit subjective. And you can come up with your own evaluation metric as well.
