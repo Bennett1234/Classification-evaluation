@@ -76,6 +76,12 @@ def bestThresshold(y_true,y_pred):
 The main problem with the F1 score is that it gives equal weight to precision and recall. We might sometimes need to include domain knowledge in our evaluation where we want to have more recall or more precision. To solve this, we can do this by creating a weighted F1 metric as below where beta manages the tradeoff between precision and recall.
 ![](<image (1).png>) 
 Here we give β times as much importance to recall as precision. 
+```
+from sklearn.metrics import fbeta_score
+y_true = [0, 1, 1, 0, 1, 1]
+y_pred = [0, 0, 1, 0, 0, 1]
+fbeta_score(y_true, y_pred,beta=0.5)
+```
 * F1 Score can also be used for Multiclass problems. See this awesome blog post by Boaz Shmueli for details.
 ### 3. Log Loss/Binary Crossentropy
 Log loss is a pretty good evaluation metric for binary classifiers and it is sometimes the optimization objective as well in case of Logistic regression and Neural Networks.
